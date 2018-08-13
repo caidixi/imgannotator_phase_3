@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class FileHelper {
-    public boolean dataExist(String fileName) {
-        File file = new File("src/main/resources/static/entity/" + fileName+".txt");
+    public boolean taskFolderExist(String taskname) {
+        File file = new File("src/main/resources/picture/" + taskname);
         return file.exists();
     }
 
@@ -76,8 +76,11 @@ public class FileHelper {
         }
     }
 
-    public boolean newFolder(String path){
-        File file = new File("src/main/resources/static/" + path);
+    public boolean newTaskFolder(String taskname){
+        if(taskFolderExist(taskname)){
+            deleteTaskFolder(taskname);
+        }
+        File file = new File("src/main/resources/picture/" + taskname);
         return file.mkdir();
     }
 
@@ -91,15 +94,15 @@ public class FileHelper {
         return false;
     }
 
-    public boolean deleteAll(String path){
+    public boolean deleteTaskFolder(String taskname){
         try {
-            File dir = new File("src/main/resources/static/" + path);
+            File dir = new File("src/main/resources/picture/" + taskname);
             if (dir.isDirectory()) {
                 String[] children = dir.list();
 
                 if(children!=null){
                     for (String aChildren : children) {
-                        boolean success = deleteAll(path + "/" + aChildren);
+                        boolean success = deleteTaskFolder(taskname + "/" + aChildren);
                         if (!success) {
                             return false;
                         }

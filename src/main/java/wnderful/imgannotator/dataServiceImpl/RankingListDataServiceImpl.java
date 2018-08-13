@@ -1,9 +1,11 @@
 package wnderful.imgannotator.dataServiceImpl;
 
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.dataService.RankingListDataService;
 import wnderful.imgannotator.vo.rankingListVo.TaskRankingListVo;
 import wnderful.imgannotator.vo.rankingListVo.UserRankingListVo;
 
+@Service
 public class RankingListDataServiceImpl implements RankingListDataService {
 
     @Override

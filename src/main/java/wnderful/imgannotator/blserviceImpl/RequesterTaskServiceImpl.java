@@ -1,5 +1,7 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.RequesterTaskService;
 import wnderful.imgannotator.dataServiceImpl.*;
 import wnderful.imgannotator.publicData.reponseCode.draftRepCode.DeleteDraftRepCode;
@@ -15,13 +17,24 @@ import wnderful.imgannotator.publicData.response.draftResponse.SaveDraftRep;
 import wnderful.imgannotator.publicData.response.taskResponse.*;
 import wnderful.imgannotator.vo.taskVo.*;
 
+@Service
 public class RequesterTaskServiceImpl implements RequesterTaskService {
 
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private TaskDataServiceImpl taskDataService = new TaskDataServiceImpl();
-    private ImgDataServiceImpl imgDataService = new ImgDataServiceImpl();
-    private DraftDataServiceImpl draftDataService = new DraftDataServiceImpl();
-    private PointsDataServiceImpl pointsDataService = new PointsDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private TaskDataServiceImpl taskDataService;
+    private ImgDataServiceImpl imgDataService;
+    private DraftDataServiceImpl draftDataService;
+    private PointsDataServiceImpl pointsDataService;
+
+    @Autowired
+    public RequesterTaskServiceImpl(UserDataServiceImpl userDataService, TaskDataServiceImpl taskDataService,
+                                    ImgDataServiceImpl imgDataService, DraftDataServiceImpl draftDataService, PointsDataServiceImpl pointsDataService) {
+        this.userDataService = userDataService;
+        this.taskDataService = taskDataService;
+        this.imgDataService = imgDataService;
+        this.draftDataService = draftDataService;
+        this.pointsDataService = pointsDataService;
+    }
 
     @Override
     public ReleaseTaskRep releaseTask(String username, String taskname) {
@@ -151,8 +164,8 @@ public class RequesterTaskServiceImpl implements RequesterTaskService {
     public Response saveDraft(String username, String taskname, String taskDescription, int markTimes, String[] taskTag, int credits, String taskType) {
         if(userDataService.requesterExist(username)){
             if(draftDataService.draftExist(taskname)){
-                if(markTimes>0&&credits>=100&&credits<=300){
-                    if(draftDataService.saveDraft(username,taskname,taskDescription,markTimes,taskTag,credits,taskType)){
+                if(markTimes>0){
+                    if(draftDataService.saveDraft(taskname,taskDescription,markTimes,taskTag,credits,taskType)){
                         return new SaveDraftRep(SaveDraftRepCode.SUCCESS);
                     }else {
                         return new SaveDraftRep(SaveDraftRepCode.FAIL);

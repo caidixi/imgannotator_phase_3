@@ -13,7 +13,6 @@ public class WorkerDisplayDetailVo {
       private int completedImgs;
       private int gotPoints;
       private int taskIsEnd;
-      private int taskIsReceipt;
       private int taskIsComplete;
       private int haveReward;
       private String[] taskTag;
@@ -22,8 +21,21 @@ public class WorkerDisplayDetailVo {
     }
 
     public WorkerDisplayDetailVo(String taskname, String taskStartTime, String imgURL, String taskDescription,
+                                 String taskRequester, int numberOfImages, int totalPoints, int currentWorker, int taskIsEnd) {
+        this.taskname = taskname;
+        this.taskStartTime = taskStartTime;
+        this.imgURL = imgURL;
+        this.taskDescription = taskDescription;
+        this.taskRequester = taskRequester;
+        this.numberOfImages = numberOfImages;
+        this.totalPoints = totalPoints;
+        this.currentWorker = currentWorker;
+        this.taskIsEnd = taskIsEnd;
+    }
+
+    public WorkerDisplayDetailVo(String taskname, String taskStartTime, String imgURL, String taskDescription,
                                  String taskRequester, int numberOfImages, int totalPoints, int currentWorker,
-                                 int needImgs, int completedImgs, int gotPoints, int taskIsEnd, int taskIsReceipt,
+                                 int needImgs, int completedImgs, int gotPoints, int taskIsEnd,
                                  int taskIsComplete, int haveReward, String[] taskTag) {
         this.taskname = taskname;
         this.taskStartTime = taskStartTime;
@@ -37,7 +49,6 @@ public class WorkerDisplayDetailVo {
         this.completedImgs = completedImgs;
         this.gotPoints = gotPoints;
         this.taskIsEnd = taskIsEnd;
-        this.taskIsReceipt = taskIsReceipt;
         this.taskIsComplete = taskIsComplete;
         this.haveReward = haveReward;
         this.taskTag = taskTag;
@@ -89,10 +100,6 @@ public class WorkerDisplayDetailVo {
 
     public int getTaskIsEnd() {
         return taskIsEnd;
-    }
-
-    public int getTaskIsReceipt() {
-        return taskIsReceipt;
     }
 
     public int getTaskIsComplete() {
@@ -153,10 +160,6 @@ public class WorkerDisplayDetailVo {
 
     public void setTaskIsEnd(int taskIsEnd) {
         this.taskIsEnd = taskIsEnd;
-    }
-
-    public void setTaskIsReceipt(int taskIsReceipt) {
-        this.taskIsReceipt = taskIsReceipt;
     }
 
     public void setTaskIsComplete(int taskIsComplete) {

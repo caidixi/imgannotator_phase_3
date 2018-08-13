@@ -14,7 +14,7 @@ public class UserMessageVo {
         this.role = "";
     }
 
-    public UserMessageVo(String username, String email, int points, String role, int releasedTasks, int completedTasks, int completedImages) {
+    public UserMessageVo(String username, String email, int points, String role) {
         this.username = username;
         this.email = email;
         this.points = points;

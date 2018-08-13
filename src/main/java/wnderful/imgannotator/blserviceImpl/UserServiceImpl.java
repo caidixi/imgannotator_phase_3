@@ -1,5 +1,7 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.UserService;
 import wnderful.imgannotator.dataServiceImpl.PointsDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.TagDataServiceImpl;
@@ -12,10 +14,18 @@ import wnderful.imgannotator.vo.userVo.CodeVo;
 import wnderful.imgannotator.vo.userVo.RequesterMessageVo;
 import wnderful.imgannotator.vo.userVo.WorkerMessageVo;
 
+@Service
 public class UserServiceImpl implements UserService {
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private PointsDataServiceImpl pointsDataService = new PointsDataServiceImpl();
-    private TagDataServiceImpl tagDataService = new TagDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private PointsDataServiceImpl pointsDataService;
+    private TagDataServiceImpl tagDataService;
+
+    @Autowired
+    public UserServiceImpl(UserDataServiceImpl userDataService, PointsDataServiceImpl pointsDataService, TagDataServiceImpl tagDataService) {
+        this.userDataService = userDataService;
+        this.pointsDataService = pointsDataService;
+        this.tagDataService = tagDataService;
+    }
 
     @Override
     public GetUserMassageRep getUserMessage(String username, String role) {
@@ -109,9 +119,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserInformationRep getUserInformation(String username) {
+    public GetUserInformationRep getWorkerInformation(String username) {
         if(userDataService.administratorExist(username)){
-            AllUserMessagesVo vo = userDataService.findAllUser();
+            AllUserMessagesVo vo = userDataService.findAllWorker();
+            if(vo!=null){
+                return new GetUserInformationRep(GetUserInformationRepCode.SUCCESS,vo);
+            }else {
+                return new GetUserInformationRep(GetUserInformationRepCode.FAIL);
+            }
+        }else {
+            return new GetUserInformationRep(GetUserInformationRepCode.NOTFOUND);
+        }
+    }
+
+    @Override
+    public GetUserInformationRep getRequesterInformation(String username) {
+        if(userDataService.administratorExist(username)){
+            AllUserMessagesVo vo = userDataService.findAllRequester();
             if(vo!=null){
                 return new GetUserInformationRep(GetUserInformationRepCode.SUCCESS,vo);
             }else {

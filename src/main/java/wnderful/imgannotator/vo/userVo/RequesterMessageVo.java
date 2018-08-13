@@ -19,11 +19,16 @@ public class RequesterMessageVo extends UserMessageVo{
         this.releasedTasks = -1;
     }
 
-    public RequesterMessageVo(String username, String email, int points, int releasedTasks) {
+    public RequesterMessageVo(String username, String email, int points,int usedPoints,int maxUnreleasedTasks) {
         this.username = username;
         this.email = email;
         this.points = points;
-        this.releasedTasks = releasedTasks;
+        this.usedPoints = usedPoints;
+        this.maxUnreleasedTasks = maxUnreleasedTasks;
+        this.releasedTasks = 0;
+        this.unreleasedTasks = 0;
+        this.completedTasks = 0;
+        this.uncompletedTasks = 0;
     }
 
     public RequesterMessageVo(String username, String email, int points, int releasedTasks, int unreleasedTasks, int completedTasks, int uncompletedTasks, int usedPoints, int maxUnreleasedTasks) {

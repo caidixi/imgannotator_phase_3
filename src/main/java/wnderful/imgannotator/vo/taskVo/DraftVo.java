@@ -12,6 +12,15 @@ public class DraftVo {
     public DraftVo() {
     }
 
+    public DraftVo(String taskname, String taskDescription, int credits, String taskType, int markTimes, int imgNum) {
+        this.taskname = taskname;
+        this.taskDescription = taskDescription;
+        this.credits = credits;
+        this.taskType = taskType;
+        this.markTimes = markTimes;
+        this.imgNum = imgNum;
+    }
+
     public DraftVo(String taskname, String taskDescription, int credits, String[] taskTag, String taskType, int markTimes, int imgNum) {
         this.taskname = taskname;
         this.taskDescription = taskDescription;

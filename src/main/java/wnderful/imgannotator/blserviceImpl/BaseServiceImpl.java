@@ -1,23 +1,33 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.BaseService;
 import wnderful.imgannotator.dataServiceImpl.TagDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.TaskDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.UserDataServiceImpl;
 import wnderful.imgannotator.publicData.reponseCode.baseResponseCode.*;
 import wnderful.imgannotator.publicData.response.baseResponse.*;
+import wnderful.imgannotator.util.JwtHelper;
 import wnderful.imgannotator.vo.baseVo.DisplayDetailVo;
 import wnderful.imgannotator.vo.baseVo.LoginVo;
-import wnderful.imgannotator.util.jwt.*;
 import wnderful.imgannotator.vo.taskVo.DisplayTaskVo;
 
 import java.io.UnsupportedEncodingException;
 
+@Service
 public class BaseServiceImpl implements BaseService {
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private TaskDataServiceImpl taskDataService = new TaskDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private TaskDataServiceImpl taskDataService;
     private JwtHelper jwtHelper = new JwtHelper();
-    private TagDataServiceImpl tagDataService = new TagDataServiceImpl();
+    private TagDataServiceImpl tagDataService;
+
+    @Autowired
+    public BaseServiceImpl(UserDataServiceImpl userDataService, TaskDataServiceImpl taskDataService, TagDataServiceImpl tagDataService) {
+        this.userDataService = userDataService;
+        this.taskDataService = taskDataService;
+        this.tagDataService = tagDataService;
+    }
 
     //登陆
     @Override

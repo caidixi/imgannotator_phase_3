@@ -11,7 +11,9 @@ public interface UserService {
 
     Response lostPoints(String username, int points);
 
-    Response getUserInformation(String username);
+    Response getWorkerInformation(String username);
+
+    Response getRequesterInformation(String username);
 
     Response getCode(String username,int points);
 

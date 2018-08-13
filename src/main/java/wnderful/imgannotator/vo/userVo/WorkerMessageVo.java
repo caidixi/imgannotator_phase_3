@@ -18,12 +18,14 @@ public class WorkerMessageVo extends UserMessageVo {
         this.completedImages = -1;
     }
 
-    public WorkerMessageVo(String username, String email, int points, int completedTasks, int completedImages) {
+    public WorkerMessageVo(String username, String email, int points) {
         this.username = username;
         this.email = email;
         this.points = points;
-        this.completedTasks = completedTasks;
-        this.completedImages = completedImages;
+        this.completedTasks = 0;
+        this.completedImages = 0;
+        this.rewardTasks = 0;
+        this.readyToCompleteTasks = 0;
     }
 
     public WorkerMessageVo(String username, String email, int points, int completedTasks, int completedImages, int readyToCompleteTasks, int rewardTasks) {

@@ -1,5 +1,6 @@
 package wnderful.imgannotator.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wnderful.imgannotator.blserviceImpl.UserServiceImpl;
 import wnderful.imgannotator.request.user.CodeRequest;
@@ -12,7 +13,12 @@ import wnderful.imgannotator.publicData.response.Response;
 @RequestMapping(value = "/service/user")
 public class UserController {
 
-    private final UserServiceImpl userService = new UserServiceImpl();
+    private final UserServiceImpl userService;
+
+    @Autowired
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/updateUserMessage/{username}", method = RequestMethod.POST)
     public Response updateUserMessage(@PathVariable("username") String username,@RequestBody UpdateUserRequest request) {
@@ -54,9 +60,14 @@ public class UserController {
         return userService.deleteTag(username,request.getTag());
     }
 
-    @RequestMapping(value = "/administrator/getUserInformation/{username}", method = RequestMethod.GET)
-    public Response getUserInformation(@PathVariable("username") String username) {
-        return userService.getUserInformation(username);
+    @RequestMapping(value = "/administrator/getWorkerInformation/{username}", method = RequestMethod.GET)
+    public Response getWorkerInformation(@PathVariable("username") String username) {
+        return userService.getWorkerInformation(username);
+    }
+
+    @RequestMapping(value = "/administrator/getRequesterInformation/{username}", method = RequestMethod.GET)
+    public Response getURequesterInformation(@PathVariable("username") String username) {
+        return userService.getRequesterInformation(username);
     }
 
 }

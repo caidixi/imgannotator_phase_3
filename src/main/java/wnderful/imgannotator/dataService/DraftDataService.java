@@ -6,11 +6,11 @@ import wnderful.imgannotator.vo.taskVo.TasknamesVo;
 public interface DraftDataService {
     boolean draftExist(String taskname);
 
-    boolean newDraft(String taskname);
+    boolean newDraft(String username,String taskname);
 
     boolean newTask(String taskname);
 
-    boolean saveDraft(String requester, String taskname, String taskDescription, int markTimes, String[] taskTag, int credits, String taskType);
+    boolean saveDraft(String taskname, String taskDescription, int markTimes, String[] taskTag, int credits, String taskType);
 
     boolean deleteDraft(String taskname);
 

@@ -15,8 +15,10 @@ public class DisplayDetailVo {
     public DisplayDetailVo() {
     }
 
+
+
     public DisplayDetailVo(String taskname, String imgURL, String taskRequester, String taskStartTime,
-                           String taskDescription, int numberOfImages, int totalPoints, int taskIsEnd, int currentWorker, String[] taskTag) {
+                           String taskDescription, int numberOfImages, int totalPoints, int taskIsEnd, int currentWorker) {
         this.taskname = taskname;
         this.imgURL = imgURL;
         this.taskRequester = taskRequester;
@@ -26,7 +28,6 @@ public class DisplayDetailVo {
         this.totalPoints = totalPoints;
         this.taskIsEnd = taskIsEnd;
         this.currentWorker = currentWorker;
-        this.taskTag = taskTag;
     }
 
     public String getTaskname() {

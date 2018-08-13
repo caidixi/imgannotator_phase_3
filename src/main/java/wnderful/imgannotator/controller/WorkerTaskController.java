@@ -1,5 +1,6 @@
 package wnderful.imgannotator.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wnderful.imgannotator.blserviceImpl.RequesterTaskServiceImpl;
 import wnderful.imgannotator.blserviceImpl.WorkerTaskServiceImpl;
@@ -10,7 +11,12 @@ import wnderful.imgannotator.request.task.SimpleTaskRequest;
 @RequestMapping(value = "/service/taskManagement/worker")
 public class WorkerTaskController {
 
-    private final WorkerTaskServiceImpl taskService = new WorkerTaskServiceImpl();
+    private final WorkerTaskServiceImpl taskService;
+
+    @Autowired
+    public WorkerTaskController(WorkerTaskServiceImpl taskService) {
+        this.taskService = taskService;
+    }
 
     @RequestMapping(value = "/receiptTask/{username}", method = RequestMethod.POST)
     public Response receiptTask(@PathVariable("username") String username, @RequestBody SimpleTaskRequest request) {

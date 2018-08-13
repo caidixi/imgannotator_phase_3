@@ -1,7 +1,10 @@
 package wnderful.imgannotator.dataService;
 
+import wnderful.imgannotator.dao.entity.Img;
 import wnderful.imgannotator.vo.markVo.ImgUrlVo;
 import wnderful.imgannotator.vo.markVo.ImgUrlsVo;
+
+import java.util.ArrayList;
 
 public interface ImgDataService {
 
@@ -20,4 +23,6 @@ public interface ImgDataService {
     int findTaskImgNum(String taskname);
 
     int findMarkedImgNum(String taskname);
+
+    ArrayList<Img> readyToMarkImg(String username, String taskname);
 }

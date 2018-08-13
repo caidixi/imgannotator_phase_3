@@ -1,5 +1,7 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.WorkerTaskService;
 import wnderful.imgannotator.dataServiceImpl.ImgDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.PointsDataServiceImpl;
@@ -12,12 +14,21 @@ import wnderful.imgannotator.vo.baseVo.PointVo;
 import wnderful.imgannotator.vo.taskVo.DisplayTaskVo;
 import wnderful.imgannotator.vo.taskVo.WorkerDisplayDetailVo;
 
+@Service
 public class WorkerTaskServiceImpl implements WorkerTaskService {
 
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private TaskDataServiceImpl taskDataService = new TaskDataServiceImpl();
-    private ImgDataServiceImpl imgDataService = new ImgDataServiceImpl();
-    private PointsDataServiceImpl pointsDataService = new PointsDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private TaskDataServiceImpl taskDataService;
+    private ImgDataServiceImpl imgDataService;
+    private PointsDataServiceImpl pointsDataService;
+
+    @Autowired
+    public WorkerTaskServiceImpl(UserDataServiceImpl userDataService, TaskDataServiceImpl taskDataService, ImgDataServiceImpl imgDataService, PointsDataServiceImpl pointsDataService) {
+        this.userDataService = userDataService;
+        this.taskDataService = taskDataService;
+        this.imgDataService = imgDataService;
+        this.pointsDataService = pointsDataService;
+    }
 
     @Override
     public ReceiptTaskRep receiptTask(String username, String taskname) {

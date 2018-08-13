@@ -17,6 +17,13 @@ public class TaskVo {
         this.numberOfImages = 0;
     }
 
+    public TaskVo(String taskname, String imgURL, int taskIsEnd, int numberOfImages) {
+        this.taskname = taskname;
+        this.imgURL = imgURL;
+        this.taskIsEnd = taskIsEnd;
+        this.numberOfImages = numberOfImages;
+    }
+
     public TaskVo(String taskname, String imgURL, int taskIsEnd, String[] taskTag, int currentWorker, int numberOfImages) {
         this.taskname = taskname;
         this.imgURL = imgURL;

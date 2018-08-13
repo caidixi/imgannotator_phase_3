@@ -1,5 +1,6 @@
 package wnderful.imgannotator.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,15 @@ import wnderful.imgannotator.request.base.*;
 @RequestMapping(value = "/base")
 public class BaseController {
 
-    private final BaseServiceImpl baseService = new BaseServiceImpl();
-    private final ImgServiceImpl imgService = new ImgServiceImpl();
+    private final BaseServiceImpl baseService;
+    private final ImgServiceImpl imgService;
+
+    @Autowired
+    public BaseController(BaseServiceImpl baseService, ImgServiceImpl imgService) {
+        this.baseService = baseService;
+        this.imgService = imgService;
+    }
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response login (@RequestBody LoginRequest request) throws Exception{

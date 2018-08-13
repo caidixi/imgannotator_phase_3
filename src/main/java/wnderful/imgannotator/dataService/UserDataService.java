@@ -29,6 +29,8 @@ public interface UserDataService {
 
     RequesterMessageVo findRequester(String requestername);
 
-    AllUserMessagesVo findAllUser();
+    AllUserMessagesVo findAllRequester();
+
+    AllUserMessagesVo findAllWorker();
 
 }

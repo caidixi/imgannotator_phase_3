@@ -1,9 +1,14 @@
 package wnderful.imgannotator.dataServiceImpl;
 
+import org.springframework.stereotype.Service;
+import wnderful.imgannotator.dao.entity.Img;
 import wnderful.imgannotator.dataService.ImgDataService;
 import wnderful.imgannotator.vo.markVo.ImgUrlVo;
 import wnderful.imgannotator.vo.markVo.ImgUrlsVo;
 
+import java.util.ArrayList;
+
+@Service
 public class ImgDataServiceImpl implements ImgDataService {
     public ImgDataServiceImpl() {
         super();
@@ -47,5 +52,15 @@ public class ImgDataServiceImpl implements ImgDataService {
     @Override
     public int findMarkedImgNum(String taskname) {
         return 0;
+    }
+
+    @Override
+    public ArrayList<Img> readyToMarkImg(String username, String taskname) {
+        ArrayList<Img> imgs = new ArrayList<>();
+        return imgs;
+    }
+
+    public ArrayList<Img> readyToCompleteImg(String taskname){
+        return null;
     }
 }

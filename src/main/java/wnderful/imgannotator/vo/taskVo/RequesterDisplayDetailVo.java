@@ -31,6 +31,19 @@ public class RequesterDisplayDetailVo {
     }
 
     public RequesterDisplayDetailVo(String taskname, String taskStartTime, String imgURL, String taskDescription,
+                                    int numberOfImages, int totalPoints, int currentWorker, int markTimes, int taskIsEnd) {
+        this.taskname = taskname;
+        this.taskStartTime = taskStartTime;
+        this.imgURL = imgURL;
+        this.taskDescription = taskDescription;
+        this.numberOfImages = numberOfImages;
+        this.totalPoints = totalPoints;
+        this.currentWorker = currentWorker;
+        this.markTimes = markTimes;
+        this.taskIsEnd = taskIsEnd;
+    }
+
+    public RequesterDisplayDetailVo(String taskname, String taskStartTime, String imgURL, String taskDescription,
                                     int numberOfImages, int totalPoints, int currentWorker, int markTimes, int releasedPoints,
                                     int completedImgs, int needImgs, int taskIsEnd, String[] taskTag, WorkerVo[] currentWorkers) {
         this.taskname = taskname;

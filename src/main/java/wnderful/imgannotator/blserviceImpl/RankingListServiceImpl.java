@@ -1,5 +1,7 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.RankingListService;
 import wnderful.imgannotator.dataServiceImpl.RankingListDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.UserDataServiceImpl;
@@ -10,9 +12,16 @@ import wnderful.imgannotator.publicData.response.rankingListResponse.RequesterRa
 import wnderful.imgannotator.publicData.response.rankingListResponse.TaskRankingRep;
 import wnderful.imgannotator.publicData.response.rankingListResponse.WorkerRankingRep;
 
+@Service
 public class RankingListServiceImpl implements RankingListService {
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private RankingListDataServiceImpl rankingListDataService = new RankingListDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private RankingListDataServiceImpl rankingListDataService;
+
+    @Autowired
+    public RankingListServiceImpl(UserDataServiceImpl userDataService, RankingListDataServiceImpl rankingListDataService) {
+        this.userDataService = userDataService;
+        this.rankingListDataService = rankingListDataService;
+    }
 
     @Override
     public TaskRankingRep getTaskRankingList(String username, String type) {

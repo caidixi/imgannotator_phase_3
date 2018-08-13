@@ -1,9 +1,11 @@
 package wnderful.imgannotator.dataServiceImpl;
 
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.dataService.PointsDataService;
 import wnderful.imgannotator.vo.baseVo.PointVo;
 import wnderful.imgannotator.vo.userVo.CodeVo;
 
+@Service
 public class PointsDataServiceImpl implements PointsDataService {
 
     @Override

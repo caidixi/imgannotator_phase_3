@@ -1,6 +1,8 @@
 package wnderful.imgannotator.blserviceImpl;
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.MarkService;
 import wnderful.imgannotator.dataServiceImpl.*;
 import wnderful.imgannotator.publicData.reponseCode.markResponseCode.*;
@@ -10,18 +12,29 @@ import wnderful.imgannotator.vo.markVo.ImgUrlVo;
 import wnderful.imgannotator.vo.markVo.ImgUrlsVo;
 import wnderful.imgannotator.vo.markVo.MarkVo;
 
+@Service
 public class MarkServiceImpl implements MarkService {
 
-    private UserDataServiceImpl userDataService = new UserDataServiceImpl();
-    private MarkDataServiceImpl markDataService = new MarkDataServiceImpl();
-    private TaskDataServiceImpl taskDataService = new TaskDataServiceImpl();
-    private ImgDataServiceImpl imgDataService = new ImgDataServiceImpl();
-    private PointsDataServiceImpl pointsDataService = new PointsDataServiceImpl();
+    private UserDataServiceImpl userDataService;
+    private MarkDataServiceImpl markDataService;
+    private TaskDataServiceImpl taskDataService;
+    private ImgDataServiceImpl imgDataService ;
+    private PointsDataServiceImpl pointsDataService;
+
+    @Autowired
+    public MarkServiceImpl(UserDataServiceImpl userDataService, MarkDataServiceImpl markDataService, TaskDataServiceImpl taskDataService,
+                           ImgDataServiceImpl imgDataService, PointsDataServiceImpl pointsDataService) {
+        this.userDataService = userDataService;
+        this.markDataService = markDataService;
+        this.taskDataService = taskDataService;
+        this.imgDataService = imgDataService;
+        this.pointsDataService = pointsDataService;
+    }
 
     @Override
     public SetMarkRep setMark(String username, String taskname, String imgID, JSONObject marks) {
         if (userDataService.workerExist(username)) {
-            if (taskDataService.findProcess(taskname, username) >= 0) {
+            if (taskDataService.isReceipt(taskname, username)) {
                 if (!taskDataService.isEnd(taskname)) {
                     if (imgDataService.imgExist(taskname, imgID)) {
                         if (markDataService.addMark(username, taskname, imgID, marks)) {
@@ -53,14 +66,10 @@ public class MarkServiceImpl implements MarkService {
         if (userDataService.workerExist(username)) {
             if (taskDataService.exist(taskname)) {
                 if (!taskDataService.isEnd(taskname)) {
-                    if (taskDataService.findProcess(taskname, username) >= 0) {
-                        if (!taskDataService.isComplete(taskname, username)) {
-                            ImgUrlVo vo = imgDataService.findAImgURL(taskname, username);
-                            if (vo != null) {
-                                return new FindURLRep(FindURLRepCode.SUCCESS, vo);
-                            } else {
-                                return new FindURLRep(FindURLRepCode.FAIL);
-                            }
+                    if (taskDataService.isReceipt(taskname, username)) {
+                        ImgUrlVo vo = imgDataService.findAImgURL(taskname, username);
+                        if (vo != null) {
+                            return new FindURLRep(FindURLRepCode.SUCCESS, vo);
                         } else {
                             return new FindURLRep(FindURLRepCode.COMPLETE);
                         }
@@ -131,7 +140,7 @@ public class MarkServiceImpl implements MarkService {
         if (userDataService.workerExist(username)) {
             if (taskDataService.exist(taskname)) {
                 if (taskDataService.isEnd(taskname)) {
-                    if (taskDataService.findProcess(taskname, username) >= 0) {
+                    if (taskDataService.isReceipt(taskname, username)) {
                         if (imgDataService.imgExist(taskname, imgID)) {
                             if (imgDataService.skipImg(username, taskname, imgID)) {
                                 return new SkipImgRep(SkipImgRepCode.SUCCESS);

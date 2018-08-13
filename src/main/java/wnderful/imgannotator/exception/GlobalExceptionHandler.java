@@ -1,5 +1,6 @@
 package wnderful.imgannotator.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,6 +35,13 @@ public class GlobalExceptionHandler {
     public Response tokenExceptionHandler(UnsupportedEncodingException exception) {
         exception.printStackTrace();
         return new GlobalResponse(GlobalRepCode.TOKENERROR);
+    }
+
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    @ResponseBody
+    public Response dataIntegrityViolationExceptionHandler(DataIntegrityViolationException exception) {
+        exception.printStackTrace();
+        return new GlobalResponse(GlobalRepCode.DATAERROE);
     }
 
 }

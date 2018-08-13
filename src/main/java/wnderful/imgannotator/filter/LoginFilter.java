@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
 import wnderful.imgannotator.publicData.reponseCode.GlobalRepCode;
 import wnderful.imgannotator.publicData.response.GlobalResponse;
-import wnderful.imgannotator.util.jwt.JwtHelper;
+import wnderful.imgannotator.util.JwtHelper;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

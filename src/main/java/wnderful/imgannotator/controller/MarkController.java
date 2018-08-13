@@ -1,5 +1,6 @@
 package wnderful.imgannotator.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wnderful.imgannotator.blserviceImpl.MarkServiceImpl;
 import wnderful.imgannotator.publicData.response.Response;
@@ -10,7 +11,12 @@ import wnderful.imgannotator.request.task.SimpleTaskRequest;
 @RequestMapping(value = "/service/mark")
 public class MarkController {
 
-    private final MarkServiceImpl markService = new MarkServiceImpl();
+    private final MarkServiceImpl markService;
+
+    @Autowired
+    public MarkController(MarkServiceImpl markService) {
+        this.markService = markService;
+    }
 
     @RequestMapping(value = "/setMark/{username}", method = RequestMethod.POST)
     public Response setMark(@PathVariable("username") String username, @RequestBody ImgMarkRequest request) {

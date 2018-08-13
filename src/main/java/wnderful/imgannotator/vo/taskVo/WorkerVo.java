@@ -3,17 +3,15 @@ package wnderful.imgannotator.vo.taskVo;
 public class WorkerVo {
     private String name;
     private int completedImgs;
-    private int needImgs;
 
     public WorkerVo() {
         name = "";
         completedImgs = -1;
     }
 
-    public WorkerVo(String name, int completedImgs, int needImgs) {
+    public WorkerVo(String name, int completedImgs) {
         this.name = name;
         this.completedImgs = completedImgs;
-        this.needImgs = needImgs;
     }
 
     public String getName() {
@@ -24,9 +22,6 @@ public class WorkerVo {
         return completedImgs;
     }
 
-    public int getNeedImgs() {
-        return needImgs;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -36,7 +31,4 @@ public class WorkerVo {
         this.completedImgs = completedImgs;
     }
 
-    public void setNeedImgs(int needImgs) {
-        this.needImgs = needImgs;
-    }
 }
