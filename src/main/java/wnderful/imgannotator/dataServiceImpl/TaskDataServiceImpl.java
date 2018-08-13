@@ -1,5 +1,6 @@
 package wnderful.imgannotator.dataServiceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wnderful.imgannotator.dao.entity.Reward;
 import wnderful.imgannotator.dao.entity.Tag;
@@ -28,6 +29,18 @@ public class TaskDataServiceImpl implements TaskDataService {
     private RewardRepository rewardRepository;
     private TagDataServiceImpl tagDataService;
     private ImgDataServiceImpl imgDataService;
+
+    @Autowired
+    public TaskDataServiceImpl(TaskRepository taskRepository, ProcessRepository processRepository, WorkerRepository workerRepository,
+                               RequesterRepository requesterRepository, RewardRepository rewardRepository, TagDataServiceImpl tagDataService, ImgDataServiceImpl imgDataService) {
+        this.taskRepository = taskRepository;
+        this.processRepository = processRepository;
+        this.workerRepository = workerRepository;
+        this.requesterRepository = requesterRepository;
+        this.rewardRepository = rewardRepository;
+        this.tagDataService = tagDataService;
+        this.imgDataService = imgDataService;
+    }
 
     //不是草稿
     @Override
