@@ -27,7 +27,7 @@ public class FilterConfiguration {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
         ArrayList<String> urlPatterns = new ArrayList<>();
-        urlPatterns.add("/test/*");// 设置匹配的url
+        urlPatterns.add("/service/*");// 设置匹配的url
         registrationBean.setUrlPatterns(urlPatterns);
         return registrationBean;
     }

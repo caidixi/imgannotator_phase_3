@@ -13,7 +13,6 @@ import wnderful.imgannotator.vo.taskVo.TasknamesVo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 
 @Service
@@ -36,6 +35,21 @@ public class DraftDataServiceImpl implements DraftDataService {
     }
 
     @Override
+    public boolean requesterDraftNotFull(String username) {
+        Requester requester = requesterRepository.findRequesterByUsername(username);
+        if(requester!=null){
+            Task[] drafts = taskRepository.findTaskByRequesterUsernameAndIsDraft(username,1);
+            if(drafts!=null){
+                return requester.getMaxReleasedTask()>drafts.length;
+            }else {
+                return true;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean newDraft(String username,String taskname) {
         Requester requester = requesterRepository.findRequesterByUsername(username);
         if(requester!=null){
@@ -51,7 +65,6 @@ public class DraftDataServiceImpl implements DraftDataService {
         Task task = taskRepository.findTaskByNameAndIsDraft(taskname,1);
         if(task!=null){
             int imgNum = task.getImgs().size();
-            task.setNumberOfImages(imgNum);
 
             if(imgNum>0){
                 String imgURL = task.getImgs().get(0).getImgURL();
@@ -96,11 +109,7 @@ public class DraftDataServiceImpl implements DraftDataService {
         Task task = taskRepository.findTaskByNameAndIsDraft(taskname,1);
         if(task!=null){
             taskRepository.delete(task);
-            if(fileHelper.deleteTaskFolder(taskname)){
-                return true;
-            }else {
-                return false;
-            }
+            return fileHelper.deleteTaskFolder(taskname);
         }else {
             return false;
         }

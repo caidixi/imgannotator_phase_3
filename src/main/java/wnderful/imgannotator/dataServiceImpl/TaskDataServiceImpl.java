@@ -3,21 +3,16 @@ package wnderful.imgannotator.dataServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wnderful.imgannotator.dao.entity.Reward;
-import wnderful.imgannotator.dao.entity.Tag;
 import wnderful.imgannotator.dao.entity.Task;
-import wnderful.imgannotator.dao.entity.user.Requester;
 import wnderful.imgannotator.dao.entity.user.Worker;
 import wnderful.imgannotator.dao.entity.Process;
 import wnderful.imgannotator.dao.repository.ProcessRepository;
 import wnderful.imgannotator.dao.repository.RewardRepository;
 import wnderful.imgannotator.dao.repository.TaskRepository;
-import wnderful.imgannotator.dao.repository.userRepository.RequesterRepository;
 import wnderful.imgannotator.dao.repository.userRepository.WorkerRepository;
 import wnderful.imgannotator.dataService.TaskDataService;
 import wnderful.imgannotator.vo.baseVo.DisplayDetailVo;
 import wnderful.imgannotator.vo.taskVo.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,21 +20,28 @@ public class TaskDataServiceImpl implements TaskDataService {
     private TaskRepository taskRepository;
     private ProcessRepository processRepository;
     private WorkerRepository workerRepository;
-    private RequesterRepository requesterRepository;
     private RewardRepository rewardRepository;
     private TagDataServiceImpl tagDataService;
     private ImgDataServiceImpl imgDataService;
 
     @Autowired
     public TaskDataServiceImpl(TaskRepository taskRepository, ProcessRepository processRepository, WorkerRepository workerRepository,
-                               RequesterRepository requesterRepository, RewardRepository rewardRepository, TagDataServiceImpl tagDataService, ImgDataServiceImpl imgDataService) {
+                                RewardRepository rewardRepository, TagDataServiceImpl tagDataService, ImgDataServiceImpl imgDataService) {
         this.taskRepository = taskRepository;
         this.processRepository = processRepository;
         this.workerRepository = workerRepository;
-        this.requesterRepository = requesterRepository;
         this.rewardRepository = rewardRepository;
         this.tagDataService = tagDataService;
         this.imgDataService = imgDataService;
+    }
+
+    @Override
+    public void completeTask(String taskname, String username) {
+        Process process = processRepository.findProcessByWorkerUsernameAndTaskName(username,taskname);
+        if(process!=null){
+            process.setIsCompleted(1);
+            processRepository.save(process);
+        }
     }
 
     //不是草稿
@@ -74,13 +76,18 @@ public class TaskDataServiceImpl implements TaskDataService {
     }
 
     @Override
+    public boolean isFinished(String taskname) {
+        return imgDataService.findTaskImgNum(taskname)==imgDataService.findMarkedImgNum(taskname);
+    }
+
+    @Override
     public boolean isReceipt(String taskname, String workername) {
         return processRepository.findProcessByWorkerUsernameAndTaskName(workername, taskname) != null;
     }
 
     @Override
     public boolean isEnd(String taskname) {
-        return taskRepository.findTaskByNameAndIsEnd(taskname, 1) != null;
+        return taskRepository.findTaskByNameAndIsEndAndIsDraft(taskname, 1,0) != null;
     }
 
     @Override
@@ -99,7 +106,7 @@ public class TaskDataServiceImpl implements TaskDataService {
         if (task != null) {
             DisplayDetailVo vo = new DisplayDetailVo(taskname, task.getImgURL(), task.getRequester().getUsername(),
 
-                    task.getStartTime(), task.getTaskDescription(), task.getNumberOfImages(), task.getCredits(), task.getIsEnd(), task.getProcesses().size());
+                    task.getStartTime(), task.getTaskDescription(), task.getImgs().size(), task.getCredits(), task.getIsEnd(), task.getProcesses().size());
             String[] tags = tagDataService.findTaskTag(taskname);
             if (tags != null) {
                 vo.setTaskTag(tags);
@@ -116,7 +123,7 @@ public class TaskDataServiceImpl implements TaskDataService {
         Task task = taskRepository.findTaskByNameAndIsDraft(taskname, 0);
         if (task != null) {
             RequesterDisplayDetailVo vo = new RequesterDisplayDetailVo(taskname, task.getStartTime(), task.getImgURL(),
-                    task.getTaskDescription(), task.getNumberOfImages(), task.getCredits(), task.getProcesses().size(), task.getMarkTimes(), task.getIsEnd());
+                    task.getTaskDescription(), task.getImgs().size(), task.getCredits(), task.getProcesses().size(), task.getMarkTimes(), task.getIsEnd());
 
             List<Process> processes = task.getProcesses();
             WorkerVo[] workerVos = new WorkerVo[processes.size()];
@@ -129,9 +136,9 @@ public class TaskDataServiceImpl implements TaskDataService {
             vo.setCurrentWorkers(workerVos);
             vo.setReleasedPoints(releasedPoints);
 
-            int readyToCompleteImg = imgDataService.readyToCompleteImg(taskname).size();
+            int readyToCompleteImg = task.getImgs().size()-imgDataService.findMarkedImgNum(taskname);
             vo.setNeedImgs(readyToCompleteImg);
-            vo.setCompletedImgs(task.getNumberOfImages() - readyToCompleteImg);
+            vo.setCompletedImgs(task.getImgs().size() - readyToCompleteImg);
 
             String[] tags = tagDataService.findTaskTag(taskname);
             if (tags != null) {
@@ -149,13 +156,13 @@ public class TaskDataServiceImpl implements TaskDataService {
         Task task = taskRepository.findTaskByNameAndIsDraft(taskname, 0);
         if (task != null) {
             WorkerDisplayDetailVo vo = new WorkerDisplayDetailVo(taskname, task.getStartTime(), task.getImgURL(), task.getTaskDescription(),
-                    task.getRequester().getUsername(), task.getNumberOfImages(), task.getCredits(), task.getProcesses().size(), task.getIsEnd());
+                    task.getRequester().getUsername(), task.getImgs().size(), task.getCredits(), task.getProcesses().size(), task.getIsEnd());
 
             Process process = processRepository.findProcessByWorkerUsernameAndTaskName(workername, taskname);
             vo.setCompletedImgs(process.getMarkedImg());
             vo.setGotPoints(process.getGotPoints());
             vo.setTaskIsComplete(process.getIsCompleted());
-            vo.setNeedImgs(imgDataService.readyToMarkImg(workername, taskname).size());
+            vo.setNeedImgs(imgDataService.readyToMarkImg(workername,taskname).size());
             if (rewardRepository.findRewardByTaskNameAndWorkerUsername(taskname, workername) != null) {
                 vo.setHaveReward(1);
             }
@@ -223,9 +230,9 @@ public class TaskDataServiceImpl implements TaskDataService {
     public DisplayTaskVo findRecommendedTask(String workername) {
         Process[] processes = processRepository.findProcessByWorkerUsername(workername);
         Task[] tasks = taskRepository.findTaskByIsDraftAndIsEnd(0,0);
-        if(tasks!=null&&processes==null){
+        if(tasks.length>0&&processes.length==0){
             return tasksToTaskVos(tasks);
-        }else if (tasks!=null&&processes!=null){
+        }else if (tasks.length>0&&processes.length>0){
             String[] taskNames = new String[processes.length];
             for(int i = 0;i < processes.length;i++){
                 taskNames[i] = processes[i].getTask().getName();
@@ -288,12 +295,12 @@ public class TaskDataServiceImpl implements TaskDataService {
     }
 
 
-    public DisplayTaskVo tasksToTaskVos(Task[] tasks) {
+    private DisplayTaskVo tasksToTaskVos(Task[] tasks) {
         if(tasks!=null&&tasks.length>0){
             TaskVo[] taskVos = new TaskVo[tasks.length];
             for(int i = 0;i < tasks.length;i++){
                 Task task = tasks[i];
-                taskVos[i] = new TaskVo(task.getName(),task.getImgURL(),task.getIsEnd(),task.getNumberOfImages());
+                taskVos[i] = new TaskVo(task.getName(),task.getImgURL(),task.getIsEnd(),task.getImgs().size());
 
                 String[] tags = tagDataService.findTaskTag(task.getName());
                 if(tags!=null&&tags.length>0){
@@ -306,7 +313,5 @@ public class TaskDataServiceImpl implements TaskDataService {
             return null;
         }
     }
-
-    ;
 }
 

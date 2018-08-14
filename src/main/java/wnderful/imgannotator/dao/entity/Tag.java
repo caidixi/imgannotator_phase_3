@@ -18,6 +18,7 @@ public class Tag {
     public Tag() {
     }
 
+
     public Tag(String content, Task task) {
         this.content = content;
         this.task = task;
@@ -25,6 +26,7 @@ public class Tag {
 
     public Tag(String content) {
         this.content = content;
+        this.task = null;
     }
 
     public Long getId() {

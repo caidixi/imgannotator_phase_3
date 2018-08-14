@@ -45,10 +45,9 @@ public class RequesterTaskServiceImpl implements RequesterTaskService {
                     if(imgNum>0){
                         DraftVo vo = draftDataService.findDraft(taskname);
                         int points = userDataService.findUserPoints(username,"requester");
-                        int lostPoints = points-imgNum*vo.getCredits();
-                        if(points-lostPoints>=0){
+                        if(points-vo.getCredits()>=0){
                             if(draftDataService.newTask(taskname)){
-                                if(pointsDataService.modifyPoints(-lostPoints,username,userDataService.findUserRole(username))){
+                                if(pointsDataService.modifyPoints(-vo.getCredits(),username,userDataService.findUserRole(username))){
                                     return new ReleaseTaskRep(ReleaseTaskRepCode.SUCCESS);
                                 }else {
                                     return new ReleaseTaskRep(ReleaseTaskRepCode.ALREADYUPLOAD);

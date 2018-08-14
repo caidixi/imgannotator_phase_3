@@ -3,7 +3,7 @@ package wnderful.imgannotator.dao.entity.user;
 import wnderful.imgannotator.dao.entity.Process;
 import wnderful.imgannotator.dao.entity.Reward;
 import wnderful.imgannotator.dao.entity.Work;
-import wnderful.imgannotator.dao.entity.mark.Mark;
+import wnderful.imgannotator.dao.entity.Mark;
 
 import javax.persistence.*;
 import java.util.ArrayList;

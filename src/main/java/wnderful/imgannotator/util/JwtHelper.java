@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import wnderful.imgannotator.exception.RechargeException;
 
 import javax.xml.crypto.Data;
 import java.io.UnsupportedEncodingException;
@@ -46,11 +47,15 @@ public class JwtHelper {
 
     }
 
-    public int verifyCode(String token,String key) throws Exception{
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(key))
-                .build();
-        DecodedJWT jwt = verifier.verify(token);
-        Map<String, Claim> claims = jwt.getClaims();
-        return claims.get("points").asInt();
+    public int verifyCode(String token,String key) throws RechargeException{
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(key))
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            Map<String, Claim> claims = jwt.getClaims();
+            return claims.get("points").asInt();
+        }catch (UnsupportedEncodingException ex){
+            throw new RechargeException();
+        }
     }
 }

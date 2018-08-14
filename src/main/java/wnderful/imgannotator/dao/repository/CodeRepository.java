@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import wnderful.imgannotator.dao.entity.Code;
 
 public interface CodeRepository extends JpaRepository<Code,Long> {
+    Code findCodeByContent(String content);
 }

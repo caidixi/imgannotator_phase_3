@@ -86,4 +86,8 @@ public class Process {
     public void setTask(Task task) {
         this.task = task;
     }
+
+    public void addMarkedImg(){
+        markedImg++;
+    }
 }

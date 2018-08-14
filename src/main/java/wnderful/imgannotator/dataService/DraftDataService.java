@@ -16,6 +16,8 @@ public interface DraftDataService {
 
     boolean isSave(String taskname,String requestername);
 
+    boolean requesterDraftNotFull(String username);
+
     DraftVo findDraft(String taskname);
 
     TasknamesVo findAllDraft(String requestername);

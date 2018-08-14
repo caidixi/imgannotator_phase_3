@@ -9,6 +9,8 @@ public interface ProcessRepository extends JpaRepository<Process,Long> {
 
     Process[] findProcessByWorkerUsernameAndIsCompleted(String username,int isCompleted);
 
+    Process[] findProcessByTaskNameAndIsCompleted(String name,int isCompleted);
+
     Process[] findProcessByWorkerUsernameAndIsCompletedAndTaskIsEnd(String username,int isCompleted,int isEnd);
 
     Process findProcessByWorkerUsernameAndTaskName(String username,String name);

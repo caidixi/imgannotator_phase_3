@@ -11,7 +11,7 @@ public class Code {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String content;
 
     public Code() {

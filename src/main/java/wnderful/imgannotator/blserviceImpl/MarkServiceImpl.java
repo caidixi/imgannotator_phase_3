@@ -18,7 +18,7 @@ public class MarkServiceImpl implements MarkService {
     private UserDataServiceImpl userDataService;
     private MarkDataServiceImpl markDataService;
     private TaskDataServiceImpl taskDataService;
-    private ImgDataServiceImpl imgDataService ;
+    private ImgDataServiceImpl imgDataService;
     private PointsDataServiceImpl pointsDataService;
 
     @Autowired
@@ -37,10 +37,10 @@ public class MarkServiceImpl implements MarkService {
             if (taskDataService.isReceipt(taskname, username)) {
                 if (!taskDataService.isEnd(taskname)) {
                     if (imgDataService.imgExist(taskname, imgID)) {
-                        if (markDataService.addMark(username, taskname, imgID, marks)) {
-                            PointVo vo = pointsDataService.getMarkReward(username, taskname, imgID);
-                            if (vo != null) {
-                                return new SetMarkRep(SetMarkRepCode.SUCCESS);
+                        PointVo vo = imgDataService.getMarkReward(username, taskname, imgID);
+                        if (vo != null) {
+                            if (markDataService.addMark(username, taskname, imgID, marks)) {
+                                return new SetMarkRep(SetMarkRepCode.SUCCESS, vo);
                             } else {
                                 return new SetMarkRep(SetMarkRepCode.GETPOINTFAIL);
                             }
@@ -67,11 +67,28 @@ public class MarkServiceImpl implements MarkService {
             if (taskDataService.exist(taskname)) {
                 if (!taskDataService.isEnd(taskname)) {
                     if (taskDataService.isReceipt(taskname, username)) {
-                        ImgUrlVo vo = imgDataService.findAImgURL(taskname, username);
-                        if (vo != null) {
-                            return new FindURLRep(FindURLRepCode.SUCCESS, vo);
+                        if (!imgDataService.taskIsCompleted(taskname, username)) {
+                            ImgUrlVo vo = imgDataService.findAImgURL(taskname, username);
+                            if (vo != null) {
+                                return new FindURLRep(FindURLRepCode.SUCCESS, vo);
+                            } else {
+                                return new FindURLRep(FindURLRepCode.FAIL);
+                            }
                         } else {
-                            return new FindURLRep(FindURLRepCode.COMPLETE);
+                            taskDataService.completeTask(taskname, username);
+                            if (taskDataService.isFinished(taskname)) {
+                                if (taskDataService.endTask(taskname)) {
+                                    if (pointsDataService.settleTaskPoints(taskname)) {
+                                        return new FindURLRep(FindURLRepCode.COMPLETE);
+                                    }else {
+                                        return new FindURLRep(FindURLRepCode.POINTERROE);
+                                    }
+                                }else {
+                                    return new FindURLRep(FindURLRepCode.ENDERROE);
+                                }
+                            }else {
+                                return new FindURLRep(FindURLRepCode.COMPLETENOTEND6);
+                            }
                         }
                     } else {
                         return new FindURLRep(FindURLRepCode.NOTASK);
@@ -119,7 +136,7 @@ public class MarkServiceImpl implements MarkService {
                         if (vo != null) {
                             return new FindMarkRep(FindMarkRepCode.SUCCESS, vo);
                         } else {
-                            return new FindMarkRep(FindMarkRepCode.FAIL);
+                            return new FindMarkRep(FindMarkRepCode.SUCCESS);
                         }
                     } else {
                         return new FindMarkRep(FindMarkRepCode.NOIMG);

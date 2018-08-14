@@ -1,22 +1,35 @@
 package wnderful.imgannotator.vo.rankingListVo;
 
-import wnderful.imgannotator.vo.rankingListVo.simpleVo.SimpleUserVo;
-
 public class UserRankingListVo {
-    private SimpleUserVo[] rankingList;
+    private SimpleVo[] rankingList;
+    private int yourRank;
 
-    public UserRankingListVo(SimpleUserVo[] rankingList) {
+    public UserRankingListVo(SimpleVo[] rankingList, int yourRank) {
+        this.rankingList = rankingList;
+        this.yourRank = yourRank;
+    }
+
+    public UserRankingListVo(SimpleVo[] rankingList) {
         this.rankingList = rankingList;
     }
 
     public UserRankingListVo() {
     }
 
-    public SimpleUserVo[] getRankingList() {
+    public SimpleVo[] getRankingList() {
         return rankingList;
     }
 
-    public void setRankingList(SimpleUserVo[] rankingList) {
+    public void setRankingList(SimpleVo[] rankingList) {
         this.rankingList = rankingList;
+    }
+
+
+    public int getYourRank() {
+        return yourRank;
+    }
+
+    public void setYourRank(int yourRank) {
+        this.yourRank = yourRank;
     }
 }

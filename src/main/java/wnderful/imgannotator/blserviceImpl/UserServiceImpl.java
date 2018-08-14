@@ -6,6 +6,7 @@ import wnderful.imgannotator.blservice.UserService;
 import wnderful.imgannotator.dataServiceImpl.PointsDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.TagDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.UserDataServiceImpl;
+import wnderful.imgannotator.exception.RechargeException;
 import wnderful.imgannotator.publicData.reponseCode.userResponseCode.*;
 import wnderful.imgannotator.publicData.response.userResponse.*;
 import wnderful.imgannotator.vo.baseVo.PointVo;
@@ -35,14 +36,14 @@ public class UserServiceImpl implements UserService {
                 if (requester != null) {
                     return new GetUserMassageRep(GetUserMassageRepCode.SUCCESS, requester);
                 } else {
-                    return new GetUserMassageRep(GetUserMassageRepCode.FAIL);
+                    return new GetUserMassageRep(GetUserMassageRepCode.NOTFOUND);
                 }
             case "worker":
                 WorkerMessageVo worker = userDataService.findWorker(username);
                 if (worker != null) {
                     return new GetUserMassageRep(GetUserMassageRepCode.SUCCESS, worker);
                 } else {
-                    return new GetUserMassageRep(GetUserMassageRepCode.FAIL);
+                    return new GetUserMassageRep(GetUserMassageRepCode.NOTFOUND);
                 }
             default:
                 return new GetUserMassageRep(GetUserMassageRepCode.NOTFOUND);
@@ -79,14 +80,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AddPointsRep addPoints(String username, String code) {
+    public AddPointsRep addPoints(String username, String code){
         if (userDataService.userExist(username)) {
-            PointVo vo = pointsDataService.codeToPoints(code,username);
+            PointVo vo = pointsDataService.codeToPoints(code);
             if (vo!=null) {
                 if (pointsDataService.modifyPoints(vo.getPoints(), username,userDataService.findUserRole(username))) {
                     return new AddPointsRep(AddPointsRepCode.SUCCESS);
                 } else {
-                    return new AddPointsRep(AddPointsRepCode.FAIL);
+                    return new AddPointsRep(AddPointsRepCode.POINTERROR);
                 }
             } else {
                 return new AddPointsRep(AddPointsRepCode.UNPROPER);

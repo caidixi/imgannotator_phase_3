@@ -6,6 +6,10 @@ public class PointVo {
     public PointVo() {
     }
 
+    public PointVo(int points) {
+        this.points = points;
+    }
+
     public int getPoints() {
         return points;
     }

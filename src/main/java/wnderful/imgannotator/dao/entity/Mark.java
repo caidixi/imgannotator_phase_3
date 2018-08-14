@@ -1,4 +1,4 @@
-package wnderful.imgannotator.dao.entity.mark;
+package wnderful.imgannotator.dao.entity;
 
 import wnderful.imgannotator.dao.entity.Img;
 import wnderful.imgannotator.dao.entity.user.Worker;
@@ -13,8 +13,8 @@ public class Mark {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private String wholeDesc;
+    @Lob
+    private String content;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
     @JoinColumn(name="worker_id")
@@ -24,18 +24,13 @@ public class Mark {
     @JoinColumn(name="img_id")
     private Img img;
 
-    @OneToMany(mappedBy = "mark",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-    private List<PolyMark> polyMarks;
-
-    @OneToMany(mappedBy = "mark",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-    private List<RectMark> rectMarks;
 
     public Mark() {
     }
 
-    public Mark(Worker worker, String wholeDesc, Img img) {
+    public Mark( String content, Worker worker, Img img) {
+        this.content = content;
         this.worker = worker;
-        this.wholeDesc = wholeDesc;
         this.img = img;
     }
 
@@ -63,27 +58,11 @@ public class Mark {
         this.img = img;
     }
 
-    public String getWholeDesc() {
-        return wholeDesc;
+    public String getContent() {
+        return content;
     }
 
-    public void setWholeDesc(String wholeDesc) {
-        this.wholeDesc = wholeDesc;
-    }
-
-    public List<PolyMark> getPolyMarks() {
-        return polyMarks;
-    }
-
-    public void setPolyMarks(ArrayList<PolyMark> polyMarks) {
-        this.polyMarks = polyMarks;
-    }
-
-    public List<RectMark> getRectMarks() {
-        return rectMarks;
-    }
-
-    public void setRectMarks(ArrayList<RectMark> rectMarks) {
-        this.rectMarks = rectMarks;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

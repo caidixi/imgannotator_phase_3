@@ -16,7 +16,6 @@ import wnderful.imgannotator.vo.userVo.RequesterMessageVo;
 import wnderful.imgannotator.vo.userVo.UserMessageVo;
 import wnderful.imgannotator.vo.userVo.WorkerMessageVo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -163,7 +162,7 @@ public class UserDataServiceImpl implements UserDataService {
             RequesterMessageVo vo = new RequesterMessageVo(requestername,requester.getEmail(),requester.getPoints(),
                     requester.getUsedPoints(),requester.getMaxReleasedTask());
 
-            Task[] completedTasks = taskRepository.findTaskByRequesterUsernameAndIsEnd(requestername,1);
+            Task[] completedTasks = taskRepository.findTaskByRequesterUsernameAndIsDraftAndIsEnd(requestername,0,1);
             if(completedTasks!=null){
                 vo.setCompletedTasks(completedTasks.length);
             }
@@ -178,7 +177,10 @@ public class UserDataServiceImpl implements UserDataService {
                 vo.setUnreleasedTasks(drafts.length);
             }
 
-            vo.setReleasedTasks(requester.getTasks().size());
+            Task[] unReleasedTasks = taskRepository.findTaskByRequesterUsernameAndIsDraft(requestername,0);
+            if(unReleasedTasks!=null){
+                vo.setReleasedTasks(unReleasedTasks.length);
+            }
 
             return vo;
         }else {
@@ -189,7 +191,7 @@ public class UserDataServiceImpl implements UserDataService {
     @Override
     public AllUserMessagesVo findAllWorker(){
         List<Worker> workers= workerRepository.findAll();
-        if(workers!=null&&workers.size()>0){
+        if(workers.size()>0){
             UserMessageVo[] userMessageVos = new UserMessageVo[workers.size()];
             for(int i = 0;i < workers.size();i++){
                 Worker worker = workers.get(i);
@@ -205,7 +207,7 @@ public class UserDataServiceImpl implements UserDataService {
     @Override
     public AllUserMessagesVo findAllRequester(){
         List<Requester> requesters= requesterRepository.findAll();
-        if(requesters!=null&&requesters.size()>0){
+        if(requesters.size()>0){
             UserMessageVo[] userMessageVos = new UserMessageVo[requesters.size()];
             for(int i = 0;i < requesters.size();i++){
                 Requester requester = requesters.get(i);

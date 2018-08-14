@@ -5,11 +5,11 @@ import wnderful.imgannotator.vo.userVo.RequesterMessageVo;
 import wnderful.imgannotator.vo.userVo.WorkerMessageVo;
 
 public interface UserDataService {
-    boolean newUser(String username,String email,String password,String role);
+    boolean newUser(String username, String email, String password, String role);
 
-    boolean setWorkerMessage(String username,String email,String password);
+    boolean setWorkerMessage(String username, String email, String password);
 
-    boolean setRequesterMessage(String username,String email,String password);
+    boolean setRequesterMessage(String username, String email, String password);
 
     boolean workerExist(String workername);
 
@@ -19,7 +19,7 @@ public interface UserDataService {
 
     boolean userExist(String username);
 
-    int findUserPoints(String username,String role);
+    int findUserPoints(String username, String role);
 
     String findUserPassword(String username);
 

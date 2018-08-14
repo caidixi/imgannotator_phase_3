@@ -42,9 +42,6 @@ public class Task {
     @Column(nullable = false)
     private int isDraft;
 
-    @Column(nullable = false)
-    private int numberOfImages;
-
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
     @JoinColumn(name="requester_id")
     private Requester requester;
@@ -75,7 +72,7 @@ public class Task {
     }
 
     public Task(String name, String taskDescription, String imgURL, String type, String startTime, int credits,
-                int imgPoints, int markTimes, int isEnd, int isDraft, int numberOfImages, Requester requester) {
+                int imgPoints, int markTimes, int isEnd, int isDraft,Requester requester) {
         this.name = name;
         this.taskDescription = taskDescription;
         this.imgURL = imgURL;
@@ -86,7 +83,6 @@ public class Task {
         this.markTimes = markTimes;
         this.isEnd = isEnd;
         this.isDraft = isDraft;
-        this.numberOfImages = numberOfImages;
         this.requester = requester;
     }
 
@@ -180,14 +176,6 @@ public class Task {
 
     public void setIsDraft(int isDraft) {
         this.isDraft = isDraft;
-    }
-
-    public int getNumberOfImages() {
-        return numberOfImages;
-    }
-
-    public void setNumberOfImages(int numberOfImages) {
-        this.numberOfImages = numberOfImages;
     }
 
     public Requester getRequester() {

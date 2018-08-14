@@ -7,11 +7,15 @@ import wnderful.imgannotator.vo.taskVo.WorkerDisplayDetailVo;
 
 public interface TaskDataService {
 
+    void completeTask(String taskname,String username);
+
     boolean exist(String taskname);
 
     boolean receiptTask(String workername,String taskname);
 
     boolean endTask(String taskname);
+
+    boolean isFinished(String taskname);
 
     boolean isReceipt(String taskname,String workername);
 

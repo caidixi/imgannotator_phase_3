@@ -1,7 +1,5 @@
 package wnderful.imgannotator.dao.entity;
 
-import wnderful.imgannotator.dao.entity.mark.Mark;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ public class Img {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String imgName;
 
     @Column(nullable = false,unique = true)
     private String imgURL;
@@ -33,8 +31,8 @@ public class Img {
     public Img() {
     }
 
-    public Img(String name, String imgURL, Task task) {
-        this.name = name;
+    public Img(String imgName, String imgURL, Task task) {
+        this.imgName = imgName;
         this.imgURL = imgURL;
         this.task = task;
     }
@@ -47,12 +45,12 @@ public class Img {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getImgName() {
+        return imgName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
     }
 
     public String getImgURL() {

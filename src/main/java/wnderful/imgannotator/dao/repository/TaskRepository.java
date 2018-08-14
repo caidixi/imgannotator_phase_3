@@ -9,9 +9,9 @@ public interface TaskRepository extends JpaRepository<Task,Long> {
 
     Task findTaskByNameAndIsEnd(String name,int isEnd);
 
-    Task[] findTaskByIsDraft(int isDraft);
+    Task findTaskByNameAndIsEndAndIsDraft(String name,int isEnd,int isDraft);
 
-    Task[] findTaskByRequesterUsernameAndIsEnd(String username,int isEnd);
+    Task[] findTaskByIsDraft(int isDraft);
 
     Task[] findTaskByRequesterUsernameAndIsDraft(String username,int isDraft);
 

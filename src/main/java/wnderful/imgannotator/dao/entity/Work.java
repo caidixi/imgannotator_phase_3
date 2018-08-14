@@ -11,7 +11,7 @@ public class Work {
     private Long id;
 
     @Column(nullable = false)
-    private long taskId;
+    private String  taskName;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
     @JoinColumn(name="worker_id")
@@ -25,8 +25,8 @@ public class Work {
     public Work() {
     }
 
-    public Work(long taskId, Worker worker, Img img) {
-        this.taskId = taskId;
+    public Work(String taskName, Worker worker, Img img) {
+        this.taskName = taskName;
         this.worker = worker;
         this.img = img;
     }
@@ -39,12 +39,12 @@ public class Work {
         this.id = id;
     }
 
-    public long getTaskId() {
-        return taskId;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTaskId(long taskId) {
-        this.taskId = taskId;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public Worker getWorker() {

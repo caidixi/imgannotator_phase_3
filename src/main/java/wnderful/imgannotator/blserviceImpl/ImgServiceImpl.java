@@ -49,18 +49,22 @@ public class ImgServiceImpl implements ImgService {
     @Override
     public CreatePackageRep createPackage(String username, String taskname) {
         if (userDataService.requesterExist(username)) {
-            if  (!taskname.equals("")) {
-                if ((!taskDataService.exist(taskname))&&(!draftDataService.draftExist(taskname))) {
-                    if (draftDataService.newDraft(username,taskname)) {
-                        return new CreatePackageRep(CreatePackageRepCode.SUCCESS);
+            if(draftDataService.requesterDraftNotFull(username)){
+                if  (!taskname.equals("")) {
+                    if ((!taskDataService.exist(taskname))&&(!draftDataService.draftExist(taskname))) {
+                        if (draftDataService.newDraft(username,taskname)) {
+                            return new CreatePackageRep(CreatePackageRepCode.SUCCESS);
+                        } else {
+                            return new CreatePackageRep(CreatePackageRepCode.FAIL);
+                        }
                     } else {
-                        return new CreatePackageRep(CreatePackageRepCode.FAIL);
+                        return new CreatePackageRep(CreatePackageRepCode.REPEAT);
                     }
                 } else {
-                    return new CreatePackageRep(CreatePackageRepCode.REPEAT);
+                    return new CreatePackageRep(CreatePackageRepCode.EMPTYTASKNAME);
                 }
-            } else {
-                return new CreatePackageRep(CreatePackageRepCode.EMPTYTASKNAME);
+            }else {
+                return new CreatePackageRep(CreatePackageRepCode.FULL);
             }
         } else {
             return new CreatePackageRep(CreatePackageRepCode.NOTFOUND);

@@ -15,7 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 @Component
-@WebFilter(urlPatterns = "/test/*",filterName = "LoginFilter")
+@WebFilter(urlPatterns = "/service/*",filterName = "LoginFilter")
 
 public class LoginFilter implements Filter {
 

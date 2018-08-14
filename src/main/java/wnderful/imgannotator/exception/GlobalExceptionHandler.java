@@ -44,4 +44,11 @@ public class GlobalExceptionHandler {
         return new GlobalResponse(GlobalRepCode.DATAERROE);
     }
 
+    @ExceptionHandler(value = RechargeException.class)
+    @ResponseBody
+    public Response RechargeExceptionHandler(RechargeException exception) {
+        exception.printStackTrace();
+        return new GlobalResponse(GlobalRepCode.WrongCode);
+    }
+
 }

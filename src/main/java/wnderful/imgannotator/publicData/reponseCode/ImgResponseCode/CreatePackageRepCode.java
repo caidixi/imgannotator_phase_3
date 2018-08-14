@@ -5,7 +5,8 @@ public enum  CreatePackageRepCode {
     FAIL(1,"图片文件夹创建失败"),
     NOTFOUND(2,"用户不存在"),
     EMPTYTASKNAME(3,"任务名不能为空"),
-    REPEAT(4,"文件夹重名");
+    REPEAT(4,"文件夹重名"),
+    FULL(5,"草稿数已到达上限");
 
     private int code;
     private String message;

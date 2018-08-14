@@ -1,6 +1,7 @@
 package wnderful.imgannotator.dataService;
 
 import wnderful.imgannotator.dao.entity.Img;
+import wnderful.imgannotator.vo.baseVo.PointVo;
 import wnderful.imgannotator.vo.markVo.ImgUrlVo;
 import wnderful.imgannotator.vo.markVo.ImgUrlsVo;
 
@@ -16,13 +17,15 @@ public interface ImgDataService {
 
     boolean uploadImg(String taskname,String imgID ,byte[] bytes);
 
-    boolean isComplete(String taskname,String imgID);
+    boolean skipImg(String username,String taskname,String imgID);
 
-    boolean skipImg(String username,String taskname,String ImgID);
+    boolean taskIsCompleted(String taskname,String username);
 
     int findTaskImgNum(String taskname);
 
     int findMarkedImgNum(String taskname);
 
     ArrayList<Img> readyToMarkImg(String username, String taskname);
+
+    PointVo getMarkReward(String username, String taskname, String imgID);
 }
