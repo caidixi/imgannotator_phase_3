@@ -10,7 +10,7 @@ public class Work {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "varchar(255) character set utf8")
     private String  taskName;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)

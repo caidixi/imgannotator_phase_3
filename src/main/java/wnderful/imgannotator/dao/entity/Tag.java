@@ -8,11 +8,11 @@ public class Tag {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "varchar(255) character set utf8")
     private String content;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
-    @JoinColumn(name="task_id")
+    @JoinColumn(name="task_name",nullable = true)
     private Task task;
 
     public Tag() {
@@ -22,11 +22,6 @@ public class Tag {
     public Tag(String content, Task task) {
         this.content = content;
         this.task = task;
-    }
-
-    public Tag(String content) {
-        this.content = content;
-        this.task = null;
     }
 
     public Long getId() {

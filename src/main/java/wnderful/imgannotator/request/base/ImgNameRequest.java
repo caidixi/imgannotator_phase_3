@@ -1,13 +1,14 @@
-package wnderful.imgannotator.request.task;
+package wnderful.imgannotator.request.base;
 
-public class SimpleTaskRequest {
+import java.io.Serializable;
 
+public class ImgNameRequest implements Serializable {
     private String taskname;
 
-    public SimpleTaskRequest() {
+    public ImgNameRequest() {
     }
 
-    public SimpleTaskRequest(String taskname) {
+    public ImgNameRequest(String taskname) {
         this.taskname = taskname;
     }
 

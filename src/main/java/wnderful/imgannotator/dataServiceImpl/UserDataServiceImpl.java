@@ -45,6 +45,9 @@ public class UserDataServiceImpl implements UserDataService {
             case "requester":
                 requesterRepository.save(new Requester(username, password, email, 100000, 5));
                 return true;
+            case "administrator":
+                administratorRepository.save(new Administrator(username, password,email));
+                return true;
             default:
                 return false;
         }

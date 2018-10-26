@@ -2,17 +2,22 @@ package wnderful.imgannotator.dataServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import wnderful.imgannotator.dao.entity.Img;
 import wnderful.imgannotator.dao.entity.Reward;
 import wnderful.imgannotator.dao.entity.Task;
 import wnderful.imgannotator.dao.entity.user.Worker;
 import wnderful.imgannotator.dao.entity.Process;
+import wnderful.imgannotator.dao.repository.ImgRepository;
 import wnderful.imgannotator.dao.repository.ProcessRepository;
 import wnderful.imgannotator.dao.repository.RewardRepository;
 import wnderful.imgannotator.dao.repository.TaskRepository;
 import wnderful.imgannotator.dao.repository.userRepository.WorkerRepository;
 import wnderful.imgannotator.dataService.TaskDataService;
+import wnderful.imgannotator.vo.baseVo.DataAnalyzeVo;
 import wnderful.imgannotator.vo.baseVo.DisplayDetailVo;
 import wnderful.imgannotator.vo.taskVo.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,24 +26,26 @@ public class TaskDataServiceImpl implements TaskDataService {
     private ProcessRepository processRepository;
     private WorkerRepository workerRepository;
     private RewardRepository rewardRepository;
+    private ImgRepository imgRepository;
     private TagDataServiceImpl tagDataService;
     private ImgDataServiceImpl imgDataService;
 
     @Autowired
     public TaskDataServiceImpl(TaskRepository taskRepository, ProcessRepository processRepository, WorkerRepository workerRepository,
-                                RewardRepository rewardRepository, TagDataServiceImpl tagDataService, ImgDataServiceImpl imgDataService) {
+                               RewardRepository rewardRepository,ImgRepository imgRepository, TagDataServiceImpl tagDataService, ImgDataServiceImpl imgDataService) {
         this.taskRepository = taskRepository;
         this.processRepository = processRepository;
         this.workerRepository = workerRepository;
         this.rewardRepository = rewardRepository;
         this.tagDataService = tagDataService;
         this.imgDataService = imgDataService;
+        this.imgRepository = imgRepository;
     }
 
     @Override
     public void completeTask(String taskname, String username) {
-        Process process = processRepository.findProcessByWorkerUsernameAndTaskName(username,taskname);
-        if(process!=null){
+        Process process = processRepository.findProcessByWorkerUsernameAndTaskName(username, taskname);
+        if (process != null) {
             process.setIsCompleted(1);
             processRepository.save(process);
         }
@@ -77,7 +84,7 @@ public class TaskDataServiceImpl implements TaskDataService {
 
     @Override
     public boolean isFinished(String taskname) {
-        return imgDataService.findTaskImgNum(taskname)==imgDataService.findMarkedImgNum(taskname);
+        return imgDataService.findTaskImgNum(taskname) == imgDataService.findMarkedImgNum(taskname);
     }
 
     @Override
@@ -87,7 +94,8 @@ public class TaskDataServiceImpl implements TaskDataService {
 
     @Override
     public boolean isEnd(String taskname) {
-        return taskRepository.findTaskByNameAndIsEndAndIsDraft(taskname, 1,0) != null;
+        System.out.println("in");
+        return taskRepository.findTaskByNameAndIsEndAndIsDraft(taskname, 1, 0) != null;
     }
 
     @Override
@@ -136,7 +144,7 @@ public class TaskDataServiceImpl implements TaskDataService {
             vo.setCurrentWorkers(workerVos);
             vo.setReleasedPoints(releasedPoints);
 
-            int readyToCompleteImg = task.getImgs().size()-imgDataService.findMarkedImgNum(taskname);
+            int readyToCompleteImg = task.getImgs().size() - imgDataService.findMarkedImgNum(taskname);
             vo.setNeedImgs(readyToCompleteImg);
             vo.setCompletedImgs(task.getImgs().size() - readyToCompleteImg);
 
@@ -162,7 +170,7 @@ public class TaskDataServiceImpl implements TaskDataService {
             vo.setCompletedImgs(process.getMarkedImg());
             vo.setGotPoints(process.getGotPoints());
             vo.setTaskIsComplete(process.getIsCompleted());
-            vo.setNeedImgs(imgDataService.readyToMarkImg(workername,taskname).size());
+            vo.setNeedImgs(imgDataService.readyToMarkImg(workername, taskname).size());
             if (rewardRepository.findRewardByTaskNameAndWorkerUsername(taskname, workername) != null) {
                 vo.setHaveReward(1);
             }
@@ -204,10 +212,10 @@ public class TaskDataServiceImpl implements TaskDataService {
 
     @Override
     public DisplayTaskVo findReleasedTask(String requestername) {
-        Task[] tasks = taskRepository.findTaskByRequesterUsernameAndIsDraft(requestername,0);
-        if(tasks!=null&&tasks.length>0){
+        Task[] tasks = taskRepository.findTaskByRequesterUsernameAndIsDraft(requestername, 0);
+        if (tasks != null && tasks.length > 0) {
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
@@ -215,13 +223,13 @@ public class TaskDataServiceImpl implements TaskDataService {
     @Override
     public DisplayTaskVo findReceiptedTask(String workername) {
         Process[] processes = processRepository.findProcessByWorkerUsername(workername);
-        if(processes!=null&&processes.length>0){
+        if (processes != null && processes.length > 0) {
             Task[] tasks = new Task[processes.length];
-            for(int i = 0;i < processes.length;i++){
+            for (int i = 0; i < processes.length; i++) {
                 tasks[i] = processes[i].getTask();
             }
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
@@ -229,31 +237,31 @@ public class TaskDataServiceImpl implements TaskDataService {
     @Override
     public DisplayTaskVo findRecommendedTask(String workername) {
         Process[] processes = processRepository.findProcessByWorkerUsername(workername);
-        Task[] tasks = taskRepository.findTaskByIsDraftAndIsEnd(0,0);
-        if(tasks.length>0&&processes.length==0){
+        Task[] tasks = taskRepository.findTaskByIsDraftAndIsEnd(0, 0);
+        if (tasks.length > 0 && processes.length == 0) {
             return tasksToTaskVos(tasks);
-        }else if (tasks.length>0&&processes.length>0){
+        } else if (tasks.length > 0) {
             String[] taskNames = new String[processes.length];
-            for(int i = 0;i < processes.length;i++){
+            for (int i = 0; i < processes.length; i++) {
                 taskNames[i] = processes[i].getTask().getName();
             }
-            Task[] recommendTasks = taskRepository.findTaskByIsDraftAndIsEndAndNameNotIn(0,0,taskNames);
+            Task[] recommendTasks = taskRepository.findTaskByIsDraftAndIsEndAndNameNotIn(0, 0, taskNames);
             return tasksToTaskVos(recommendTasks);
-        }else {
+        } else {
             return null;
         }
     }
 
     @Override
     public DisplayTaskVo findUncompletedTask(String workername) {
-        Process[] processes = processRepository.findProcessByWorkerUsernameAndIsCompleted(workername,0);
-        if(processes!=null){
+        Process[] processes = processRepository.findProcessByWorkerUsernameAndIsCompleted(workername, 0);
+        if (processes != null) {
             Task[] tasks = new Task[processes.length];
-            for(int i = 0;i < processes.length;i++){
+            for (int i = 0; i < processes.length; i++) {
                 tasks[i] = processes[i].getTask();
             }
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
@@ -261,25 +269,25 @@ public class TaskDataServiceImpl implements TaskDataService {
     @Override
     public DisplayTaskVo findReWardTask(String workername) {
         Reward[] rewards = rewardRepository.findRewardByWorkerUsername(workername);
-        if(rewards!=null){
+        if (rewards != null) {
             int size = rewards.length;
             Task[] tasks = new Task[size];
-            for(int i = 0;i < size;i++){
+            for (int i = 0; i < size; i++) {
                 tasks[i] = rewards[i].getTask();
             }
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
 
     @Override
     public DisplayTaskVo searchTaskByName(String taskname) {
-        Task task = taskRepository.findTaskByNameAndIsDraft(taskname,0);
-        if(task!=null){
+        Task task = taskRepository.findTaskByNameAndIsDraft(taskname, 0);
+        if (task != null) {
             Task[] tasks = new Task[]{task};
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
@@ -287,31 +295,116 @@ public class TaskDataServiceImpl implements TaskDataService {
     @Override
     public DisplayTaskVo searchTaskByTag(String tag) {
         Task[] tasks = tagDataService.findTagTask(tag);
-        if(tasks!=null&&tasks.length>0){
+        if (tasks != null && tasks.length > 0) {
             return tasksToTaskVos(tasks);
-        }else {
+        } else {
             return null;
         }
     }
 
 
     private DisplayTaskVo tasksToTaskVos(Task[] tasks) {
-        if(tasks!=null&&tasks.length>0){
+        if (tasks != null && tasks.length > 0) {
             TaskVo[] taskVos = new TaskVo[tasks.length];
-            for(int i = 0;i < tasks.length;i++){
+            for (int i = 0; i < tasks.length; i++) {
                 Task task = tasks[i];
-                taskVos[i] = new TaskVo(task.getName(),task.getImgURL(),task.getIsEnd(),task.getImgs().size());
+                taskVos[i] = new TaskVo(task.getName(), task.getImgURL(), task.getIsEnd(), task.getImgs().size());
 
                 String[] tags = tagDataService.findTaskTag(task.getName());
-                if(tags!=null&&tags.length>0){
+                if (tags != null && tags.length > 0) {
                     taskVos[i].setTaskTag(tags);
                 }
                 taskVos[i].setCurrentWorker(task.getProcesses().size());
             }
             return new DisplayTaskVo(taskVos);
-        }else {
+        } else {
             return null;
         }
+    }
+
+    @Override
+    public DataAnalyzeVo analyzeTaskData(String taskname) {
+        Task task = taskRepository.findTaskByNameAndIsEnd(taskname, 1);
+        assert (task != null && task.getImgs() != null&&task.getImgs().size()>0);
+        List<Img> imgs = task.getImgs();
+        List<Img>  allImgs = imgRepository.findImgByIdIsNotNull();
+        assert (allImgs.size()>0);
+        ArrayList<Double> skipRates = getImgSkipRate(imgs);
+        ArrayList<Double> allSkipRates = getImgSkipRate(allImgs);
+        System.out.println("imgSize:"+imgs.size()+"allImgSize"+allImgs.size());
+
+        //求样本均值
+        double mean = getMean(skipRates);
+        System.out.println("mean:" + mean);
+
+        //求总体均值
+        double allMean = getMean(allSkipRates);
+        System.out.println("all mean:" + allMean);
+
+        //求样本方差
+        double allVarience = getVarience(allSkipRates,allMean);
+        System.out.println("varience:" + allVarience);
+
+        //计算标志量
+        assert(allVarience!=0&&skipRates.size()!=0);
+        if(mean==allMean){
+            return new DataAnalyzeVo("normal");
+        }else{
+            double z = (mean-allMean)/(allVarience/Math.sqrt(skipRates.size()));
+            double Z005 = 1.645;
+            System.out.println("Z:" + z);
+
+            if(z >= Z005){
+                return new DataAnalyzeVo("high");
+            }else if (z <= -Z005){
+                return new DataAnalyzeVo("low");
+            }else {
+                return new DataAnalyzeVo("normal");
+            }
+        }
+    }
+
+    private ArrayList<Double> getImgSkipRate(List<Img> imgs){
+        ArrayList<Double> skipRates = new ArrayList<>();
+
+        for (Img img : imgs) {
+            double workTimes = img.getWorks().size();
+            double markTimes = img.getMarks().size();
+            double skipRate = 0;
+            System.out.println("img:"+img.getImgName());
+            System.out.println("worktime:"+workTimes+" marktimes:"+markTimes);
+
+            assert (workTimes >= markTimes);
+            if(workTimes > 0){
+                if(markTimes>0){
+                    skipRate = (workTimes - markTimes) / workTimes;
+                }else{
+                    skipRate = 1;
+                }
+            }
+            skipRates.add(skipRate);
+        }
+        return skipRates;
+    }
+
+    private double getMean(ArrayList<Double> numbers){
+        double firstMoment = 0;
+        int size = numbers.size();
+        assert (size!=0);
+        for (Double number : numbers) {
+            firstMoment = firstMoment + number;
+        }
+        return firstMoment/size;
+    }
+
+    private double getVarience(ArrayList<Double> numbers,double mean){
+        double secondMoment = 0;
+        int size = numbers.size();
+        assert (size!=0);
+        for(Double num:numbers){
+            secondMoment = secondMoment + Math.pow(num-mean,2);
+        }
+        return secondMoment/size;
     }
 }
 

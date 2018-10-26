@@ -14,4 +14,6 @@ public interface BaseService {
     Response displayAllTask();
 
     Response displayAllTag();
+
+    Response analyzeData(String taskname);
 }

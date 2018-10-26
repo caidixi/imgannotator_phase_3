@@ -8,11 +8,7 @@ import java.util.List;
 
 @Entity
 public class Requester {
-
     @Id
-    @GeneratedValue
-    private Long id;
-
     @Column(nullable = false,unique = true)
     private String username;
 
@@ -43,14 +39,6 @@ public class Requester {
         this.email = email;
         this.points = points;
         this.maxReleasedTask = maxReleasedTask;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {

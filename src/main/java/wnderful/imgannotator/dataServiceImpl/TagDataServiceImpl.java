@@ -5,26 +5,28 @@ import org.springframework.stereotype.Service;
 import wnderful.imgannotator.dao.entity.Tag;
 import wnderful.imgannotator.dao.entity.Task;
 import wnderful.imgannotator.dao.repository.TagRepository;
+import wnderful.imgannotator.dao.repository.TaskRepository;
 import wnderful.imgannotator.dataService.TagDataService;
 import wnderful.imgannotator.vo.baseVo.TagsVo;
 
 @Service
 public class TagDataServiceImpl implements TagDataService {
-    private TagRepository tagRepository;
-
     @Autowired
-    public TagDataServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
+    private TagRepository tagRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+    private String defaultTaksName = "default";
 
     @Override
     public boolean tagExist(String content) {
-        return tagRepository.findTagByContentAndTaskIsNull(content) != null;
+        return tagRepository.findTagByContentAndTaskName(content,defaultTaksName) != null;
     }
 
     @Override
     public boolean addTag(String content) {
-        tagRepository.save(new Tag(content));
+        Task task = taskRepository.findTaskByNameAndIsDraft(defaultTaksName,1);
+        assert (task == null);
+        tagRepository.save(new Tag(content,task));
         return true;
     }
 
@@ -36,7 +38,7 @@ public class TagDataServiceImpl implements TagDataService {
 
     @Override
     public TagsVo findAllTags() {
-        Tag[] tags = tagRepository.findTagByTaskIsNull();
+        Tag[] tags = tagRepository.findTagByTaskName(defaultTaksName);
         if (tags != null) {
             String[] contents = new String[tags.length];
             for(int i = 0;i < tags.length;i++){

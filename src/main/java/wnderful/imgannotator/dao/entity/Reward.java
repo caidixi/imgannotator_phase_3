@@ -19,7 +19,7 @@ public class Reward {
     private Worker worker;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
-    @JoinColumn(name="task_id")
+    @JoinColumn(name="task_name")
     private Task task;
 
     public Reward() {

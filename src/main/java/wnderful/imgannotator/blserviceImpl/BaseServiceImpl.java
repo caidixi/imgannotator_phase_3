@@ -1,5 +1,6 @@
 package wnderful.imgannotator.blserviceImpl;
 
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wnderful.imgannotator.blservice.BaseService;
@@ -7,8 +8,10 @@ import wnderful.imgannotator.dataServiceImpl.TagDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.TaskDataServiceImpl;
 import wnderful.imgannotator.dataServiceImpl.UserDataServiceImpl;
 import wnderful.imgannotator.publicData.reponseCode.baseResponseCode.*;
+import wnderful.imgannotator.publicData.response.Response;
 import wnderful.imgannotator.publicData.response.baseResponse.*;
 import wnderful.imgannotator.util.JwtHelper;
+import wnderful.imgannotator.vo.baseVo.DataAnalyzeVo;
 import wnderful.imgannotator.vo.baseVo.DisplayDetailVo;
 import wnderful.imgannotator.vo.baseVo.LoginVo;
 import wnderful.imgannotator.vo.taskVo.DisplayTaskVo;
@@ -124,5 +127,14 @@ public class BaseServiceImpl implements BaseService {
     @Override
     public DisplayAllTagRep displayAllTag() {
         return new DisplayAllTagRep(DisplayAllTagRepCode.SUCCESS, tagDataService.findAllTags());
+    }
+
+    @Override
+    public Response analyzeData(String taskname) {
+        if(taskDataService.exist(taskname)&&(taskDataService.isEnd(taskname)||taskDataService.isFinished(taskname))){
+            return new DataAnalyzeRep(DataAnalyzeRepCode.SUCCESS,taskDataService.analyzeTaskData(taskname));
+        }else {
+            return new DataAnalyzeRep(DataAnalyzeRepCode.FAIL);
+        }
     }
 }

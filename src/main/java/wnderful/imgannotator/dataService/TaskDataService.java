@@ -1,5 +1,6 @@
 package wnderful.imgannotator.dataService;
 
+import wnderful.imgannotator.vo.baseVo.DataAnalyzeVo;
 import wnderful.imgannotator.vo.baseVo.DisplayDetailVo;
 import wnderful.imgannotator.vo.taskVo.DisplayTaskVo;
 import wnderful.imgannotator.vo.taskVo.RequesterDisplayDetailVo;
@@ -22,6 +23,8 @@ public interface TaskDataService {
     boolean isEnd(String taskname);
 
     boolean isRelease(String taskname,String requestername);
+
+    DataAnalyzeVo analyzeTaskData(String taskname);
 
     DisplayDetailVo visitorFindTaskDetail(String taskname);
 

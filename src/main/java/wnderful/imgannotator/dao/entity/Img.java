@@ -10,15 +10,15 @@ public class Img {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "varchar(255) character set utf8")
     private String imgName;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false,unique = true,columnDefinition = "varchar(255) character set utf8")
     private String imgURL;
 
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)
-    @JoinColumn(name="task_id")
+    @JoinColumn(name="task_name")
     private Task task;
 
     @OneToMany(mappedBy = "img",cascade=CascadeType.ALL,fetch=FetchType.LAZY)

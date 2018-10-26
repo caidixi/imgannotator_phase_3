@@ -41,7 +41,7 @@ public class PointsDataServiceImpl implements PointsDataService {
         try {
             Code code = codeRepository.findCodeByContent(content);
             if(code!=null){
-                int points = jwtHelper.verifyCode(content,"recharge");
+                int points = jwtHelper.verifyCode(content);
                 codeRepository.delete(code);
                 return new PointVo(points);
             }else {
@@ -68,8 +68,10 @@ public class PointsDataServiceImpl implements PointsDataService {
             case "requester":
                 Requester requester = requesterRepository.findRequesterByUsername(username);
                 int newPoints = requester.getPoints()+points;
+                int usedPoints = requester.getUsedPoints() - points;
                 if(newPoints>=0){
                     requester.setPoints(newPoints);
+                    requester.setUsedPoints(usedPoints);
                     requesterRepository.save(requester);
                     return true;
                 }else {

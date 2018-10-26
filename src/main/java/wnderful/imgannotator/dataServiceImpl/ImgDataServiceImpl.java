@@ -82,7 +82,7 @@ public class ImgDataServiceImpl implements ImgDataService {
     public boolean uploadImg(String taskname, String imgID, byte[] bytes) {
         Task task = taskRepository.findTaskByNameAndIsEndAndIsDraft(taskname,0,1);
         if(task!=null){
-            String URL = "/"+taskname+"/"+imgID;
+            String URL = "picture/"+taskname+"/"+imgID;
             if(fileHelper.savePicture(taskname,imgID,bytes)){
                 imgRepository.save(new Img(imgID,URL,task));
                 return true;
@@ -151,6 +151,7 @@ public class ImgDataServiceImpl implements ImgDataService {
         }
     }
 
+    //标记积分分配算法
     private int calculateImgPoints(Process process, Img img) {
         Task task = img.getTask();
         double basic = task.getImgPoints();

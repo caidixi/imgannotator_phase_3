@@ -13,7 +13,7 @@ public class Mark {
     @GeneratedValue
     private Long id;
 
-    @Lob
+    @Column(columnDefinition = "varchar(10000) character set utf8")
     private String content;
 
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)

@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 
 @Component
 @WebFilter(urlPatterns = "/service/*",filterName = "LoginFilter")
-
 public class LoginFilter implements Filter {
 
     private final JwtHelper jwtHelper = new JwtHelper();
@@ -40,7 +39,7 @@ public class LoginFilter implements Filter {
         String username = names[length-1];
 
         try{
-            if(username.equals(jwtHelper.verifyToken(token,"secret"))){
+            if(username.equals(jwtHelper.verifyToken(token))){
                 loginSuccess = true;
             }
         }catch (Exception ex){

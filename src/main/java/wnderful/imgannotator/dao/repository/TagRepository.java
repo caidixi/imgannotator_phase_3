@@ -7,7 +7,7 @@ import wnderful.imgannotator.dao.entity.Tag;
 import javax.transaction.Transactional;
 
 public interface TagRepository extends JpaRepository<Tag,Long> {
-    Tag findTagByContentAndTaskIsNull(String content);
+    Tag findTagByContentAndTaskName(String content,String name);
     Tag[] findTagByContent(String content);
     Tag[] findTagByTaskIsNull();
     Tag[] findTagByTaskName(String name);

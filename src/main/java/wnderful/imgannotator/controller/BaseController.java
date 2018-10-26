@@ -13,6 +13,7 @@ import wnderful.imgannotator.publicData.reponseCode.ImgResponseCode.UploadRepCod
 import wnderful.imgannotator.publicData.response.Response;
 import wnderful.imgannotator.publicData.response.ImgResponse.UploadRep;
 import wnderful.imgannotator.request.base.*;
+import wnderful.imgannotator.request.task.SimpleTaskRequest;
 
 @RestController
 @RequestMapping(value = "/base")
@@ -58,13 +59,19 @@ public class BaseController {
         return baseService.displayAllTag();
     }
 
-    @RequestMapping(value = "/images/upload/{taskname}",method = RequestMethod.POST)
-    public Response uploadImg(@PathVariable("taskname") String taskname, MultipartFile imageObject){
+    @RequestMapping(value = "/images/upload",method = RequestMethod.POST)
+    public Response uploadImg(@RequestParam("imageObject") MultipartFile imageObject,ImgNameRequest imgNameRequest){
         try {
+            String taskname = imgNameRequest.getTaskname();
             return imgService.uploadImg(imageObject.getBytes(),imageObject.getOriginalFilename(),taskname);
         } catch (Exception e) {
             e.printStackTrace();
             return new UploadRep(UploadRepCode.FAIL);
         }
+    }
+
+    @RequestMapping(value = "/analyze",method = RequestMethod.POST)
+    public Response dataAnalyze(@RequestBody SimpleTaskRequest taskRequest){
+        return baseService.analyzeData(taskRequest.getTaskname());
     }
 }

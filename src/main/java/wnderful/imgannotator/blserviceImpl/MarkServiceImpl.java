@@ -156,7 +156,7 @@ public class MarkServiceImpl implements MarkService {
     public SkipImgRep skipImg(String taskname, String imgID, String username) {
         if (userDataService.workerExist(username)) {
             if (taskDataService.exist(taskname)) {
-                if (taskDataService.isEnd(taskname)) {
+                if (!taskDataService.isEnd(taskname)) {
                     if (taskDataService.isReceipt(taskname, username)) {
                         if (imgDataService.imgExist(taskname, imgID)) {
                             if (imgDataService.skipImg(username, taskname, imgID)) {

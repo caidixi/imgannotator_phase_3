@@ -65,24 +65,26 @@ public class DraftDataServiceImpl implements DraftDataService {
         Task task = taskRepository.findTaskByNameAndIsDraft(taskname,1);
         if(task!=null){
             int imgNum = task.getImgs().size();
+            int markTimes = task.getMarkTimes();
 
-            if(imgNum>0){
+            if(imgNum>0&&markTimes>0){
                 String imgURL = task.getImgs().get(0).getImgURL();
                 task.setImgURL(imgURL);
+
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("yyyyMMdd hh:mm");
+                task.setStartTime(now.format(formatter));
+
+                int imgPoints = task.getCredits()/(imgNum*markTimes);
+                task.setImgPoints(imgPoints);
+
+                task.setIsDraft(0);
+                taskRepository.save(task);
+                return true;
             }else {
                 return false;
             }
-
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter =
-                    DateTimeFormatter.ofPattern("yyyyMMdd hh:mm");
-            task.setStartTime(now.format(formatter));
-
-            task.setImgPoints(task.getCredits()/imgNum/task.getMarkTimes());
-
-            task.setIsDraft(0);
-            taskRepository.save(task);
-            return true;
         }else {
             return false;
         }
